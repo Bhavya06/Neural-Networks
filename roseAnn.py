@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 from datetime import datetime
 import numpy as np
+import sys
 
 startTime = datetime.now()
 print("\n\n\nStarting the execution now:\n")
@@ -39,12 +40,6 @@ initial_acc = 50
 acc = 0
 
 def genetic(iterations):
-    # nn_model_genetic = mlrose.NeuralNetwork(hidden_nodes = [4], activation = 'relu', 
-    #                                 algorithm = 'genetic_alg', 
-    #                                 max_iters = iterations, bias = True, is_classifier = True, 
-    #                                 learning_rate = 0.0001, early_stopping = True, 
-    #                                 clip_max = 5, max_attempts = 100, random_state = 3)
-
     nn_model_genetic = mlrose.NeuralNetwork(
 	hidden_nodes = [4],
 	activation = 'relu',
@@ -95,33 +90,64 @@ def gradDesc(iterations):
 # acc = y_test_accuracy*100
 
 # for i in range(1, 10):
-# while(acc < 98):
-#     y_test_accuracy = genetic(iters)
-#     acc = y_test_accuracy[1] * 100
-#     print(acc)
-#     print("Current execution time elapsed = ", datetime.now() - startTime)
-#     if (acc < initial_acc):
 
-#         iters = iters + 1000
-#     else:
-#         print("Higher accuracy found: ", acc, "With iterations: ", iters)
-#         iters = iters + 1000
 
 #running for 1 iteration
+
+print("\n\n\n\n")
+dict = {}
+
 acc3 = genetic(iters)
-print(acc3[1])
-print("\n\n")
+print("\n\n\n\n")
+print("Genetic Algorithm gave: ",round(acc3[1]*100,2), "%")
+dict['genetic'] = acc3[1]
+
 acc1 = random_hill_climb(iters)
-print(acc1[1])
+print("Random Hill Climbing gave: ",round(acc1[1]*100,2), "%")
+dict['random_hill_climb'] = acc1[1]
+
 acc2 = gradDesc(iters)
-print(acc2[1])
+print("Gradient descent gave: ",round(acc2[1]*100,2), "%")
+dict['gradDesc'] = acc2[1]
 
 
+k = list(dict.keys())
+v= list(dict.values())
+max_acc_algo = k[v.index(max(v))]
+max_acc = max(v)
+# print(max_acc)
 
+acc = max_acc
 
+if max_acc_algo == 'gradDesc':
+    algo = 1
+elif max_acc_algo == 'random_hill_climb':
+    algo = 2
+else:
+    algo = 3
 
+print("Exploiting algorithm: ", max_acc_algo)
 
-# print("The Testing accuracy is: ",y_test_accuracy[1]*100,"%")
+loop = 1
 
-print("\n")
+while (loop < 5 and acc < 98):
+    iters = iters + 550
+    if algo == 1:
+        y_test_accuracy = gradDesc(iters)
+    elif  algo == 2:
+        y_test_accuracy = random_hill_climb(iters)
+    else:
+        y_test_accuracy = genetic(iters)
+    
+    if (y_test_accuracy[1] * 100 == acc):
+        loop = loop + 1
+    else:
+        loop = 0
+
+    acc = y_test_accuracy[1] * 100
+    print("Exploiting the accuracy: ",acc, "In ", iters, "Iterations")
+    print("Current execution time elapsed = ", datetime.now() - startTime)
+
+    
+print("The final accuracy is: ", acc, "Which took ", iters,"Iterations")
 print("Execution time in seconds = ", datetime.now() - startTime)
