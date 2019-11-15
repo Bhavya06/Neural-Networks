@@ -34,34 +34,45 @@ X_test_scaled = sc.fit_transform(X_test)
 X_train, y_train, X_test, y_test = np.array(X_train), np.array(y_train), np.array(X_test), np.array(y_test)
 #converting all the scaled data to numpy arrays
 
+iters = 100
+initial_acc = 50
 acc = 0
 
-def gradDesc():
-    nn_model2 = mlrose.NeuralNetwork(hidden_nodes = [2], activation = 'relu', 
+
+
+def gradDesc(iterations):
+    nn_model = mlrose.NeuralNetwork(hidden_nodes = [4], activation = 'relu', 
                                     algorithm = 'gradient_descent', 
-                                    max_iters = 5000, bias = True, is_classifier = True, 
+                                    max_iters = iterations, bias = True, is_classifier = True, 
                                     learning_rate = 0.0001, early_stopping = True, 
                                     clip_max = 5, max_attempts = 100, random_state = 3)
 
-    nn_model2.fit(X_train_scaled, y_train)
+    nn_model.fit(X_train_scaled, y_train)
 
-    # y_train_pred = nn_model2.predict(X_train_scaled)
+    # y_train_pred = nn_model.predict(X_train_scaled)
     # y_train_accuracy = accuracy_score(y_train, y_train_pred)
     # print("The Training accuracy is: ",y_train_accuracy*100,"%")
 
-    y_test_pred = nn_model2.predict(X_test_scaled)
+    y_test_pred = nn_model.predict(X_test_scaled)
     y_test_accuracy = accuracy_score(y_test, y_test_pred)
     return (y_test_pred, y_test_accuracy)
 # acc = y_test_accuracy*100
 
-y_test_accuracy = gradDesc()
-# print(y_test_accuracy)
-if (y_test_accuracy[1] > (acc*100) ):
-    print("Higher accuracy found")
+for i in range(1, 10):
+    y_test_accuracy = gradDesc(iters)
+    acc = y_test_accuracy[1] * 100
+    print(acc)
+    if (acc < initial_acc ):
+        iters = iters + 1000
+    else:
+        print("Higher accuracy found: ", acc, "With iterations: ", iters)
+        iters = iters + 1000
+    if (acc > 95):
+        break
 
 
 
-print("The Testing accuracy is: ",y_test_accuracy[1]*100,"%")
+# print("The Testing accuracy is: ",y_test_accuracy[1]*100,"%")
 
 print("\n")
 print("Execution time in seconds = ", datetime.now() - startTime)
