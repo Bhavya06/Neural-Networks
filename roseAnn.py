@@ -38,7 +38,33 @@ iters = 100
 initial_acc = 50
 acc = 0
 
+def genetic(iterations):
+    nn_model_genetic = mlrose.NeuralNetwork(hidden_nodes = [4], activation = 'relu', 
+                                    algorithm = 'genetic_alg', 
+                                    max_iters = iterations, bias = True, is_classifier = True, 
+                                    learning_rate = 0.0001, early_stopping = True, 
+                                    clip_max = 5, max_attempts = 100, random_state = 3)
 
+    nn_model_genetic.fit(X_train_scaled, y_train)
+
+    # y_train_pred = nn_model.predict(X_train_scaled)
+    # y_train_accuracy = accuracy_score(y_train, y_train_pred)
+    # print("The Training accuracy is: ",y_train_accuracy*100,"%")
+
+    y_test_pred = nn_model_genetic.predict(X_test_scaled)
+    y_test_accuracy = accuracy_score(y_test, y_test_pred)
+    return (y_test_pred, y_test_accuracy)
+
+def random_hill_climb(iterations):
+    nn_model_randomHill = mlrose.NeuralNetwork(hidden_nodes = [2], activation = 'relu', \
+                                 algorithm = 'random_hill_climb', max_iters = 1000, \
+                                 bias = True, is_classifier = True, learning_rate = 0.0001, \
+                                 early_stopping = True, clip_max = 5, max_attempts = 100, \
+                                 random_state = 3)
+
+    y_test_pred = nn_model_randomHill.predict(X_test_scaled)
+    y_test_accuracy = accuracy_score(y_test, y_test_pred)
+    return (y_test_pred, y_test_accuracy)
 
 def gradDesc(iterations):
     nn_model = mlrose.NeuralNetwork(hidden_nodes = [4], activation = 'relu', 
@@ -69,8 +95,6 @@ for i in range(1, 10):
         iters = iters + 1000
     if (acc > 95):
         break
-
-
 
 # print("The Testing accuracy is: ",y_test_accuracy[1]*100,"%")
 
