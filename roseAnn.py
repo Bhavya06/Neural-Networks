@@ -107,7 +107,7 @@ def gradDesc(iterations):
 
 #running for 1 iteration
 
-print("\nExploring all the algorithms with 50 iterations:")
+print("\nExploring all the algorithms with 100 iterations:")
 dict = {}
 
 acc3 = genetic(iters)
