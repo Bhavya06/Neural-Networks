@@ -1,4 +1,6 @@
-# **Artificial Intelligence Project** UE17CS325
+# **Artificial Intelligence Project** 
+
+# UE17CS325
 
 ## On Eagle Strategy
 
