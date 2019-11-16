@@ -7,7 +7,9 @@ from sklearn.metrics import accuracy_score
 from datetime import datetime
 import numpy as np
 import sys
-import matplotlib.pyplot as plt 
+# import matplotlib
+# matplotlib.use('qt4agg')
+# import matplotlib.pyplot as plt 
 
 import warnings; warnings.filterwarnings("ignore")
 
@@ -45,7 +47,7 @@ acc = 0
 def genetic(iterations):
     nn_model_genetic = mlrose.NeuralNetwork(
         hidden_nodes = [4],
-        activation = 'relu',
+        activation = 'sigmoid',
         algorithm = 'genetic_alg',
         max_iters = iterations,
         is_classifier = True,
@@ -160,12 +162,9 @@ while (loop < 3 and acc < 97):
         loop = 0
 
     acc = y_test_accuracy[1] * 100
-    print("Exploiting the accuracy: ",acc, "In ", iters, "Iterations")
+    print("Exploiting the accuracy: ",round(acc),2, "In ", iters, "Iterations")
     print("Current execution time elapsed = ", datetime.now() - startTime)
 
     
 print("The final accuracy is: ", acc, "Which took ", iters,"Iterations")
 print("Execution time in seconds = ", datetime.now() - startTime)
-
-print("Comparing the algorithms:")
-
