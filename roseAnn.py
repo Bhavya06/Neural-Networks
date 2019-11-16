@@ -7,6 +7,9 @@ from sklearn.metrics import accuracy_score
 from datetime import datetime
 import numpy as np
 import sys
+import matplotlib.pyplot as plt 
+
+import warnings; warnings.filterwarnings("ignore")
 
 startTime = datetime.now()
 print("\nStarting the execution now:\n")
@@ -35,30 +38,28 @@ X_test_scaled = sc.fit_transform(X_test)
 X_train, y_train, X_test, y_test = np.array(X_train), np.array(y_train), np.array(X_test), np.array(y_test)
 #converting all the scaled data to numpy arrays
 
-iters = 50
+iters = 100
 initial_acc = 50
 acc = 0
 
 def genetic(iterations):
     nn_model_genetic = mlrose.NeuralNetwork(
-	hidden_nodes = [4],
-	activation = 'relu',
-	algorithm = 'genetic_alg',
-	max_iters = iterations,
-	is_classifier = True,
-	learning_rate = 0.0001,
-    early_stopping = True, 
-    clip_max = 5,
-	max_attempts = 100,
-	random_state = 3
+        hidden_nodes = [4],
+        activation = 'relu',
+        algorithm = 'genetic_alg',
+        max_iters = iterations,
+        is_classifier = True,
+        learning_rate = 0.0001,
+        early_stopping = True, 
+        clip_max = 5,
+        max_attempts = 100,
+        random_state = 3
     )
     nn_model_genetic.fit(X_train, y_train)
 
     y_test_pred = nn_model_genetic.predict(X_test_scaled)
     y_test_accuracy = accuracy_score(y_test, y_test_pred)
     return (y_test_pred, y_test_accuracy)
-
-
 
 def random_hill_climb(iterations):
     nn_model1 = mlrose.NeuralNetwork(
@@ -81,11 +82,18 @@ def random_hill_climb(iterations):
     return(y_test_pred, y_test_accuracy)
 
 def gradDesc(iterations):
-    nn_model_gradDesc = mlrose.NeuralNetwork(hidden_nodes = [4], activation = 'relu', 
-                                    algorithm = 'gradient_descent', 
-                                    max_iters = iterations, bias = True, is_classifier = True, 
-                                    learning_rate = 0.0001, early_stopping = True, 
-                                    clip_max = 5, max_attempts = 100, random_state = 3)
+    nn_model_gradDesc = mlrose.NeuralNetwork(
+        hidden_nodes = [4],
+        activation = 'relu',
+        algorithm = 'gradient_descent', 
+        max_iters = iterations,
+        bias = True,
+        is_classifier = True, 
+        learning_rate = 0.0001,
+        early_stopping = True, 
+        clip_max = 5,
+        max_attempts = 100,
+        random_state = 3)
 
     nn_model_gradDesc.fit(X_train_scaled, y_train)
 
@@ -96,18 +104,13 @@ def gradDesc(iterations):
     y_test_pred = nn_model_gradDesc.predict(X_test_scaled)
     y_test_accuracy = accuracy_score(y_test, y_test_pred)
     return (y_test_pred, y_test_accuracy)
-# acc = y_test_accuracy*100
-
-# for i in range(1, 10):
-
 
 #running for 1 iteration
 
-print("\n")
+print("\nExploring all the algorithms with 50 iterations:")
 dict = {}
 
 acc3 = genetic(iters)
-print("\n\n\n\n")
 print("Genetic Algorithm gave: ",round(acc3[1]*100,2), "%")
 dict['genetic'] = acc3[1]
 
@@ -135,12 +138,12 @@ elif max_acc_algo == 'random_hill_climb':
 else:
     algo = 3
 
-print("Exploiting algorithm: ", max_acc_algo)
+print("\nExploiting algorithm: ", max_acc_algo,"\n")
 
 loop = 1
 
-while (loop < 5 and acc < 98):
-    iters = iters + 550
+while (loop < 3 and acc < 97):
+    iters = iters + 400
     if algo == 1:
         y_test_accuracy = gradDesc(iters)
     elif  algo == 2:
@@ -163,3 +166,6 @@ while (loop < 5 and acc < 98):
     
 print("The final accuracy is: ", acc, "Which took ", iters,"Iterations")
 print("Execution time in seconds = ", datetime.now() - startTime)
+
+print("Comparing the algorithms:")
+
