@@ -9,7 +9,7 @@ import numpy as np
 import sys
 
 startTime = datetime.now()
-print("\n\n\nStarting the execution now:\n")
+print("\nStarting the execution now:\n")
 
 l = []
 def generateColumns(start, end):
@@ -35,7 +35,7 @@ X_test_scaled = sc.fit_transform(X_test)
 X_train, y_train, X_test, y_test = np.array(X_train), np.array(y_train), np.array(X_test), np.array(y_test)
 #converting all the scaled data to numpy arrays
 
-iters = 1
+iters = 50
 initial_acc = 50
 acc = 0
 
@@ -47,6 +47,8 @@ def genetic(iterations):
 	max_iters = iterations,
 	is_classifier = True,
 	learning_rate = 0.0001,
+    early_stopping = True, 
+    clip_max = 5,
 	max_attempts = 100,
 	random_state = 3
     )
@@ -59,11 +61,18 @@ def genetic(iterations):
 
 
 def random_hill_climb(iterations):
-    nn_model1 = mlrose.NeuralNetwork(hidden_nodes = [2], activation ='relu', 
-                                 algorithm ='random_hill_climb', 
-                                 max_iters = iterations, bias = True, is_classifier = True, 
-                                 learning_rate = 0.0001, early_stopping = True, 
-                                 clip_max = 5, max_attempts = 100, random_state = 3)
+    nn_model1 = mlrose.NeuralNetwork(
+        hidden_nodes=[4],
+        activation ='relu', 
+        algorithm='random_hill_climb', 
+        max_iters=iterations,
+        bias=True,
+        is_classifier = True, 
+        learning_rate=0.0001,
+        early_stopping = True, 
+        clip_max = 5,
+        max_attempts=100,
+        random_state = 3)
 
     nn_model1.fit(X_train_scaled, y_train)
 
@@ -94,7 +103,7 @@ def gradDesc(iterations):
 
 #running for 1 iteration
 
-print("\n\n\n\n")
+print("\n")
 dict = {}
 
 acc3 = genetic(iters)
@@ -137,7 +146,10 @@ while (loop < 5 and acc < 98):
     elif  algo == 2:
         y_test_accuracy = random_hill_climb(iters)
     else:
-        y_test_accuracy = genetic(iters)
+        try:
+            y_test_accuracy = genetic(iters)
+        except:
+            print("")
     
     if (y_test_accuracy[1] * 100 == acc):
         loop = loop + 1
