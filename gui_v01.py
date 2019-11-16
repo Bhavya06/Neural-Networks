@@ -130,7 +130,6 @@ def eagle():
 		iters = iters + 550
 		if algo == 1:
 			y_test_accuracy = gradDesc(iters)
-			comments
 		elif  algo == 2:
 			y_test_accuracy = random_hill_climb(iters)
 		else:
