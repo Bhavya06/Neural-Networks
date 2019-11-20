@@ -147,10 +147,10 @@ else:
 
 print("\nExploiting algorithm: ", max_acc_algo, "\n")
 
-loop = 1
+count = 1
 
-while (loop < 3 and acc < 97):
-    iters = iters + 400
+while (count < 3 and acc < 97):
+    iters = iters + 50
     if algo == 1:
         y_test_accuracy = gradDesc(iters)
     elif algo == 2:
@@ -162,13 +162,13 @@ while (loop < 3 and acc < 97):
             print("")
 
     if (y_test_accuracy[1] * 100 == acc):
-        loop = loop + 1
+        count = count + 1
     else:
-        loop = 0
+        count = 0
 
     acc = y_test_accuracy[1] * 100
     print("Exploiting the accuracy: ", round(
-        acc), 2, "In ", iters, "Iterations")
+        acc, 2), "In ", iters, "Iterations")
     print("Current execution time elapsed = ", datetime.now() - startTime)
 
 
